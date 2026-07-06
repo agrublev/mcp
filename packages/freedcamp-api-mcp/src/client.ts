@@ -19,13 +19,14 @@ export class FreedcampClient {
   /**
    * Build authentication query parameters.
    * Uses secured HMAC-SHA1 mode when apiSecret is provided, otherwise plain api_key mode.
+   * Note: HMAC-SHA1 is used here for Freedcamp's request-signing scheme (not password storage).
    */
   private buildAuthParams(): Record<string, string> {
     if (this.apiSecret) {
       const timestamp = Math.floor(Date.now() / 1000).toString();
-      const hash = createHmac('sha1', this.apiSecret)
-        .update(this.apiKey + timestamp)
-        .digest('hex');
+      // The Freedcamp secured-API spec requires: HMAC-SHA1(apiKey + timestamp, apiSecret)
+      const message = this.apiKey + timestamp;
+      const hash = createHmac('sha1', this.apiSecret).update(message).digest('hex');
       return { api_key: this.apiKey, timestamp, hash };
     }
     return { api_key: this.apiKey };
@@ -155,9 +156,10 @@ export class FreedcampClient {
   // ── Comments ───────────────────────────────────────────────────────────────
 
   async addComment(taskId: string, content: string): Promise<FreedcampComment> {
+    const OBJECT_TYPE_TASK = 3; // Freedcamp object type identifier for tasks
     const res = await this.request<{ data: { comments: FreedcampComment[] } }>('POST', '/comments', {
       object_id: taskId,
-      object_type: 3, // 3 = task
+      object_type: OBJECT_TYPE_TASK,
       content,
     });
     const comment = res.data.comments?.[0];

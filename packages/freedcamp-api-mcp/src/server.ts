@@ -29,8 +29,9 @@ const ALL_TOOLS: ToolDefinition[] = [
 
 function registerTool(server: McpServer, tool: ToolDefinition, client: FreedcampClient): void {
   if (tool.inputSchema) {
-    // Use `as any` to avoid TypeScript's excessive type-instantiation depth issue
-    // with complex Zod schema generics at the call site.
+    // TypeScript cannot resolve the deeply-nested Zod generic at the `tool()` call site when the
+    // schema is typed as the abstract `ZodRawShape`. Casting to `any` here is safe because
+    // the runtime value is always a valid `ZodRawShape`; the MCP SDK validates inputs at runtime.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (server.tool as any)(tool.name, tool.description, tool.inputSchema, async (args: Record<string, unknown>) => {
       try {
