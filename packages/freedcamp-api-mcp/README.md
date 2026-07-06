@@ -16,35 +16,33 @@
 
 ## 🌟 Overview
 
-This repository provides a Freedcamp MCP server that connects AI assistants (Claude, Cursor, ChatGPT, etc.) to your [Freedcamp](https://freedcamp.com) account. AI agents can list projects, manage task lists, create and update tasks, and add comments — all through natural conversation.
-
-## 📦 What's Inside
-
-### 💻 Freedcamp API MCP Server (`packages/freedcamp-api-mcp`)
-
-A plug-and-play MCP server for the Freedcamp REST API. Gives any MCP-compatible AI assistant full access to your Freedcamp workspace.
+This MCP server connects AI assistants (Claude, Cursor, ChatGPT, etc.) to your [Freedcamp](https://freedcamp.com) account, giving them the ability to list projects, manage task lists, create and update tasks, and add comments — all through natural conversation.
 
 ## 🧰 Available Tools
 
 | Tool | Description |
 |------|-------------|
-| `list_projects` | List all accessible Freedcamp projects |
-| `get_project` | Get details of a specific project |
-| `list_task_lists` | List all task lists in a project |
-| `create_task_list` | Create a new task list in a project |
+| `list_projects` | List all Freedcamp projects accessible to the authenticated user |
+| `get_project` | Get details of a specific project by ID |
+| `list_task_lists` | List all task lists (task groups) in a project |
+| `create_task_list` | Create a new task list inside a project |
 | `list_tasks` | List all tasks in a task list |
-| `get_task` | Get details of a specific task |
-| `create_task` | Create a new task |
-| `update_task` | Update a task (title, description, due date, assignee, priority, status) |
-| `delete_task` | Delete a task |
+| `get_task` | Get details of a specific task by ID |
+| `create_task` | Create a new task in a task list |
+| `update_task` | Update an existing task (title, description, due date, assignee, priority, status) |
+| `delete_task` | Permanently delete a task |
 | `add_comment` | Add a comment to a task |
 
 ## 🔑 Authentication
 
-Get your API credentials from **Freedcamp → My Account → Integrations → API**.
+The server authenticates with the Freedcamp API using an **API key** (and an optional **API secret** for HMAC-SHA1 secured requests).
 
-- **API Key** — required
-- **API Secret** — optional; enables HMAC-SHA1 secured requests (recommended)
+### Getting your API credentials
+
+1. Log in to your [Freedcamp](https://freedcamp.com) account.
+2. Go to **My Account → Integrations → API**.
+3. Copy your **API key**.
+4. Optionally, copy your **API secret** for secured authentication (recommended).
 
 ## 🚀 Quick Start
 
@@ -67,7 +65,7 @@ Add this to your `claude_desktop_config.json`:
 }
 ```
 
-### For Cursor
+### For Cursor or other MCP clients
 
 ```json
 {
@@ -84,9 +82,26 @@ Add this to your `claude_desktop_config.json`:
 }
 ```
 
+### Command-line flags
+
+```bash
+FREEDCAMP_API_KEY=your_key node dist/index.js
+# or with flags:
+node dist/index.js --api-key your_key --api-secret your_secret
+```
+
+| Flag | Short | Env Variable | Description | Required |
+|------|-------|--------------|-------------|----------|
+| `--api-key` | `-k` | `FREEDCAMP_API_KEY` | Freedcamp API key | **Yes** |
+| `--api-secret` | `-s` | `FREEDCAMP_API_SECRET` | Freedcamp API secret (for HMAC auth) | No |
+
 ## 🛠️ Local Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/agrublev/mcp.git
+cd mcp
+
 # Install dependencies
 yarn install
 
@@ -99,28 +114,19 @@ FREEDCAMP_API_KEY=your_key node packages/freedcamp-api-mcp/dist/index.js
 
 ## 📚 Example Prompts
 
+Once connected, try asking your AI assistant:
+
 - "List all my Freedcamp projects"
 - "Show me the tasks in task list 12345"
 - "Create a task called 'Fix login bug' in task list 12345 with high priority"
 - "Mark task 67890 as completed"
 - "Add a comment to task 67890: 'Reviewed and approved'"
 
-## 📚 Documentation
+## 🔐 Security Best Practices
 
-- [Freedcamp API MCP Documentation](./packages/freedcamp-api-mcp/README.md)
-
-## 📋 Prerequisites
-
-- Node.js v20 or higher
-- A [Freedcamp](https://freedcamp.com) account with API credentials
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add some amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+- **Never commit your API key** to version control.
+- Use the **API secret** for HMAC-SHA1 secured requests when possible.
+- Store credentials in environment variables, not hardcoded in config files.
 
 ## 📄 License
 

@@ -1,7 +1,7 @@
 {
-  "name": "monday-ai",
+  "name": "freedcamp-mcp",
   "version": "1.0.0",
-  "description": "monday.com AI repository",
+  "description": "Freedcamp MCP server",
   "private": true,
   "packageManager": "yarn@1.22.21",
   "scripts": {
@@ -24,6 +24,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "author": "monday.com",
+  "author": "Freedcamp MCP contributors",
   "license": "MIT"
 }

@@ -1,0 +1,31 @@
+{
+  "name": "@freedcamp/freedcamp-api-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for the Freedcamp API",
+  "license": "MIT",
+  "bin": {
+    "mcp-server-freedcamp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && shx chmod +x dist/index.js",
+    "watch": "tsc --watch",
+    "start": "yarn build && node dist/index.js",
+    "prettier": "prettier --write \"src/**/*.ts\" --ignore-path \"../../.prettierignore\"",
+    "lint": "eslint --fix \"src/**/*.ts\" --ignore-path \"../../.eslintignore\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.2",
+    "dotenv": "^16.4.7",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.4",
+    "shx": "^0.3.4",
+    "typescript": "^5.6.2"
+  }
+}
