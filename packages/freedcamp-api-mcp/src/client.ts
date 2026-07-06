@@ -8,6 +8,9 @@ export interface FreedcampClientConfig {
 }
 
 export class FreedcampClient {
+  /** Freedcamp API object-type identifier for task objects. */
+  private static readonly OBJECT_TYPE_TASK = 3;
+
   private apiKey: string;
   private apiSecret?: string;
 
@@ -156,10 +159,9 @@ export class FreedcampClient {
   // ── Comments ───────────────────────────────────────────────────────────────
 
   async addComment(taskId: string, content: string): Promise<FreedcampComment> {
-    const OBJECT_TYPE_TASK = 3; // Freedcamp object type identifier for tasks
     const res = await this.request<{ data: { comments: FreedcampComment[] } }>('POST', '/comments', {
       object_id: taskId,
-      object_type: OBJECT_TYPE_TASK,
+      object_type: FreedcampClient.OBJECT_TYPE_TASK,
       content,
     });
     const comment = res.data.comments?.[0];
